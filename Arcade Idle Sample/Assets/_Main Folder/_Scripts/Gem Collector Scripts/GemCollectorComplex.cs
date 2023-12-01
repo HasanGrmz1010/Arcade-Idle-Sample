@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,18 +23,20 @@ public class GemCollectorComplex : MonoBehaviour
 
     private Coroutine unlocking_C;
     public event EventHandler GCUnlocked;
-
+    public event EventHandler onMoneyChanged;
 
     Sequence seq;
     void Start()
     {
+        onMoneyChanged += InGameCanvas.instance.onMoneyChanged;
+
+        // ========== GEM COLLECTING TWEEN SEQUENCE ==========
         seq = DOTween.Sequence();
         seq.Pause();
         seq.Append(smasher.DOMoveY(-1f, .4f).SetEase(Ease.InOutBounce));
         seq.Append(smasher.DOMoveY(2f, 2f).SetEase(Ease.InCubic).SetDelay(.4f));
         seq.SetDelay(1.25f);
         seq.OnComplete(SmashGround);
-
 
         cost = GameManager.instance._managerData.GC_unlock_cost;
         GCUnlocked += RaiseGemCollector;
@@ -44,7 +45,7 @@ public class GemCollectorComplex : MonoBehaviour
 
     void Update()
     {
-        if (player_inside && !unlocked)
+        if (player_inside && !unlocked && Player.instance.GetMoney() >= cost)
         {
             unlocking_C = StartCoroutine(Unlocking(.05f));
             player_inside = false;
@@ -93,6 +94,8 @@ public class GemCollectorComplex : MonoBehaviour
 
     void RaiseGemCollector(object sender, EventArgs e)
     {
+        Player.instance.TakeMoney(GameManager.instance._managerData.GC_unlock_cost);
+        onMoneyChanged?.Invoke(this, EventArgs.Empty);
         COLLECTOR.SetActive(true);
         base_cube.DOMoveY(0f, .4f).SetEase(Ease.OutSine);
         smasher.DOMoveY(2f, .4f).SetEase(Ease.OutSine).SetDelay(.4f).OnComplete(() =>

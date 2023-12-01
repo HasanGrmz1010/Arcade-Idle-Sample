@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5081f7b11983584fb1065712aec424b, type: 3}
   m_Name: Manager
   m_EditorClassIdentifier: 
+  Start_Money: 600
+  Treasure_Health: 200
   GC_unlock_cost: 200
-  GC_production_rate: 2
+  GC_production_rate: 12
+  GC_gem_value: 20
   GT_unlock_cost: 400
-  GT_fire_rate: 1
+  GT_fire_rate: 0.75
   GT_bullet_damage: 10
   GT_bullet_speed: 5
   Walker_pool_size: 60
   Walker_spawn_time: 2
   Walker_damage: 20
   Walker_hitpoint: 50
+  Walker_prize: 30
+  enemy_hit: {fileID: 7486790876492956444, guid: 59b2cd1f7b2837843b8d72975a2d2df1,
+    type: 3}
+  enemy_poof: {fileID: 2916237139199889546, guid: a344fea545071a34b97e1e9b59723921,
+    type: 3}

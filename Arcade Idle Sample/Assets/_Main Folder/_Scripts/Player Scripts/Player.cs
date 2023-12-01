@@ -1,23 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    #region Singleton
+    public static Player instance;
+
+    private void Awake()
+    {
+        money = GameManager.instance._managerData.Start_Money;
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+    #endregion
+
     private int money;
 
     [SerializeField] Animator _animator;
-    Rigidbody rgb;
     bool isTouchingScreen;
     public float moveSpeed;
 
     Vector3 moveVec, initMousePos, mousePos;
-
-    void Start()
-    {
-        rgb = GetComponent<Rigidbody>();
-        GiveMoney(999999);
-    }
 
     void Update()
     {
@@ -59,27 +67,13 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region Collision Scripts
-    private void OnTriggerEnter(Collider col)
-    {
-        switch (col.gameObject.layer)
-        {
-            case 6:
-
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void OnTriggerExit(Collider col)
-    {
-        
-    }
-    #endregion
-
     #region Economy Scripts
-    public void GiveMoney(int _val) { money = _val; }
+    public void GiveMoney(int _val) { money += _val; }
+    public void TakeMoney(int _val) {
+        if (money <= 0){return;}
+        else if ((money - _val) < 0) { money = 0; }
+        else { money -= _val; }
+    }
     public int GetMoney() { return money; }
     #endregion
 }

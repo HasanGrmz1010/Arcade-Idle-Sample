@@ -1,21 +1,19 @@
-using DG.Tweening;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GemCollector : MonoBehaviour
 {
     bool gemTaken = true;
-    int gems = 0;
 
     GemCollectorComplex _gc_complex;
-    Transform smasher;
+
+    public event EventHandler onGemMined;
 
     private void Start()
     {
-        smasher = transform.GetChild(0);
+        onGemMined += InGameCanvas.instance.onMoneyChanged;
         _gc_complex = transform.parent.GetComponent<GemCollectorComplex>();
-
     }
 
     private void Update()
@@ -29,8 +27,9 @@ public class GemCollector : MonoBehaviour
 
     IEnumerator CollectGems()
     {
-        gems++;
         yield return new WaitForSeconds(GameManager.instance._managerData.GC_production_rate);
+        Player.instance.GiveMoney(GameManager.instance._managerData.GC_gem_value);
+        onGemMined?.Invoke(this, EventArgs.Empty);
         gemTaken = true;
     }
 }

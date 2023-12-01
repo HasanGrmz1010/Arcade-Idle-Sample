@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -26,10 +25,12 @@ public class GuardTowerComplex : MonoBehaviour
 
     private Coroutine unlocking_C;
     public event EventHandler TowerUnlocked;
-
+    public event EventHandler onMoneyChanged;
 
     private void Start()
     {
+        onMoneyChanged += InGameCanvas.instance.onMoneyChanged;
+
         cost = GameManager.instance._managerData.GT_unlock_cost;
         TowerUnlocked += RaiseGuardTower;
         unlocked = false; player_inside = false; raised = false;
@@ -37,7 +38,7 @@ public class GuardTowerComplex : MonoBehaviour
 
     private void Update()
     {
-        if (player_inside && !unlocked)
+        if (player_inside && !unlocked && Player.instance.GetMoney() >= cost)
         {
             unlocking_C = StartCoroutine(Unlocking(.05f));
             player_inside = false;
@@ -85,6 +86,8 @@ public class GuardTowerComplex : MonoBehaviour
 
     void RaiseGuardTower(object sender, EventArgs e)
     {
+        Player.instance.TakeMoney(GameManager.instance._managerData.GT_unlock_cost);
+        onMoneyChanged?.Invoke(this, EventArgs.Empty);
         TOWER.SetActive(true);
         ground.DOMoveY(0f, .4f).SetEase(Ease.OutSine);
         body_cube.DOMoveY(1.6f, .4f).SetEase(Ease.OutSine).SetDelay(0.2f);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,6 @@ public class GuardTower : MonoBehaviour
     bool reloaded = true;
 
     [SerializeField] Transform muzzlePoint;
-
     [SerializeField] private GameObject _towerBullet;
     [SerializeField] private GameObject _currentTarget;
     Transform _targetAimPoint;
@@ -17,15 +15,18 @@ public class GuardTower : MonoBehaviour
     List<GameObject> enemiesInRange = new List<GameObject>();
     
     GuardTowerComplex _towerComplex;
-
     Enemy _currentTargetScript;
-
     private void Start()
     {
         _towerComplex = transform.GetComponentInParent<GuardTowerComplex>();
     }
 
     private void Update()
+    {
+        GuardTowerFunction();
+    }
+
+    void GuardTowerFunction()
     {
         if ((enemiesInRange.Count > 0 && _currentTarget == null))
         {
@@ -42,14 +43,13 @@ public class GuardTower : MonoBehaviour
         {
             if (enemiesInRange.Contains(_currentTarget))
             {
-                turret.forward = Vector3.Slerp(turret.forward, _targetAimPoint.position - muzzlePoint.position, 5f * Time.deltaTime);
+                turret.forward = Vector3.Slerp(turret.forward, _targetAimPoint.position - muzzlePoint.position, 20f * Time.deltaTime);
                 if (reloaded)
                 {
                     StartCoroutine(WaitAndShoot(GameManager.instance._managerData.GT_fire_rate));
                     reloaded = false;
                 }
             }
-
         }
     }
 
@@ -93,10 +93,7 @@ public class GuardTower : MonoBehaviour
             {
                 case 7:
                     enemiesInRange.Remove(other.gameObject);
-                    if (_currentTarget == other.gameObject)
-                    {
-                        _currentTarget = null;
-                    }
+                    if (_currentTarget == other.gameObject){ _currentTarget = null; }
                     break;
                 default:
                     break;
@@ -133,7 +130,6 @@ public class GuardTower : MonoBehaviour
         GuardTowerAmmo _ammoScript = _bullet.GetComponent<GuardTowerAmmo>();
         Vector3 _bullet_vec = _targetAimPoint.position - muzzlePoint.position;
         _ammoScript.SetMoveVector(_bullet_vec);
-      
     }
 
     IEnumerator WaitAndShoot(float _rate)
