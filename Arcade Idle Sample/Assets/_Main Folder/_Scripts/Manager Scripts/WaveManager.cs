@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
-    List<GameObject> AliveEnemies = new List<GameObject>();
+    
     #region Singleton
     public static WaveManager instance;
     private void Awake()
@@ -22,12 +23,22 @@ public class WaveManager : MonoBehaviour
     }
     #endregion
 
+    List<GameObject> AliveEnemies = new List<GameObject>();
     bool readyToSpawn = false;
-    [SerializeField] private Queue<GameObject> EnemyPool = new Queue<GameObject>();
+
+    [Serializable]
+    public class Pool
+    {
+        public string tag;
+        public GameObject _prefab;
+        public int size;
+    }
+    public List<Pool> pools;
+    public Dictionary<string, Queue<GameObject>> poolDict;
 
     [SerializeField] Button startWaveButton;
-    [SerializeField] GameObject Enemy;
-    [SerializeField] Transform GoalTreasure;
+    [SerializeField] GameObject Zombie;
+    public Transform GoalTreasure;
     [SerializeField] List<Transform> spawners;
 
     public event EventHandler onLevelChanged;
@@ -37,13 +48,19 @@ public class WaveManager : MonoBehaviour
         onLevelChanged += InGameCanvas.instance.onLevelChanged;
 
         // =========== Spawn inactive pool of enemies =========== OBJECT POOLING
-        int _pool_size = GameManager.instance._managerData.Walker_pool_size;
-        for (int i = 0; i < _pool_size; i++)
+        poolDict = new Dictionary<string, Queue<GameObject>>();
+        foreach (Pool pool in pools)
         {
-            GameObject _enemy = Instantiate(Enemy, transform.position, Quaternion.identity);
-            _enemy.transform.SetParent(this.transform);
-            EnemyPool.Enqueue(_enemy);
-            _enemy.SetActive(false);
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool._prefab, transform.position, Quaternion.identity);
+                obj.transform.SetParent(this.transform);
+                obj.SetActive(false);
+                objectPool.Enqueue(obj);
+            }
+
+            poolDict.Add(pool.tag, objectPool);
         }
     }
 
@@ -76,36 +93,47 @@ public class WaveManager : MonoBehaviour
         startWaveButton.gameObject.SetActive(false);
         GameManager.instance._state = GameManager.State.wave_active;
         int enemyAmount = GameManager.instance._managerData.Level_EnemySeries[GameManager.instance.GetLevel()];
-        for (int i = 0; i < enemyAmount; i++)
+        for (int i = 0; i < enemyAmount / 3; i++)
         {
             int _rand_spawner = UnityEngine.Random.Range(0, spawners.Count);
-            TakeEnemyFromPool(spawners[_rand_spawner].position, Quaternion.identity);
+            SpawnFromPool("zombie", spawners[_rand_spawner].position, Quaternion.identity);
+            SpawnFromPool("goblin", spawners[_rand_spawner].position, Quaternion.identity);
+            SpawnFromPool("golem", spawners[_rand_spawner].position, Quaternion.identity);
         }
     }
 
     #region Object Pooling Functions
-    public void AddEnemyToPool(GameObject _enemy)
+
+    public GameObject SpawnFromPool(string _tag, Vector3 _pos, Quaternion _rot)
     {
-        _enemy.transform.position = transform.position;
-        _enemy.transform.SetParent(this.transform);
-        _enemy.SetActive(false);
-        AliveEnemies.Remove(_enemy);
-        EnemyPool.Enqueue(_enemy);
-        _enemy.GetComponent<Enemy>().setDead(true);
+        if (!poolDict.ContainsKey(_tag)) { return null; }
+
+        else
+        {
+            GameObject obj_toSpawn = poolDict[_tag].Dequeue();
+            AliveEnemies.Add(obj_toSpawn);
+            obj_toSpawn.SetActive(true);
+            obj_toSpawn.transform.SetParent(null);
+            obj_toSpawn.transform.position = _pos;
+            obj_toSpawn.transform.rotation = _rot;
+            obj_toSpawn.GetComponent<IEnemy>().SetTarget(GoalTreasure);
+            return obj_toSpawn;
+        }
     }
 
-    public GameObject TakeEnemyFromPool(Vector3 _pos, Quaternion _qua)
+    public void ReturnToPool(GameObject _obj, string _tag)
     {
-        GameObject _taken_Enemy = EnemyPool.Dequeue();
-        _taken_Enemy.transform.SetParent(null);
-        _taken_Enemy.SetActive(true);
-        AliveEnemies.Add(_taken_Enemy);
-        _taken_Enemy.GetComponent<Enemy>().SetTarget(GoalTreasure);
-        _taken_Enemy.GetComponent<Enemy>()._treasureScript = GoalTreasure.GetComponent<Treasure>();
-        _taken_Enemy.GetComponent<Enemy>().SetHealth(GameManager.instance._managerData.Walker_hitpoint);
-        _taken_Enemy.transform.position = _pos; _taken_Enemy.transform.rotation = _qua;
-        _taken_Enemy.GetComponent<Enemy>().setDead(false);
-        return _taken_Enemy;
+        if (!poolDict.ContainsKey(_tag)) { return; }
+
+        else
+        {
+            _obj.transform.position = transform.position;
+            _obj.transform.SetParent(this.transform);
+            _obj.SetActive(false);
+            AliveEnemies.Remove(_obj);
+            _obj.GetComponent<IEnemy>().setDead(true);
+            poolDict[_tag].Enqueue(_obj);
+        }
     }
     #endregion
 

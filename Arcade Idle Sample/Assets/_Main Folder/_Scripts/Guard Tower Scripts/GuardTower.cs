@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,8 @@ public class GuardTower : MonoBehaviour
     List<GameObject> enemiesInRange = new List<GameObject>();
     
     GuardTowerComplex _towerComplex;
-    Enemy _currentTargetScript;
+    IEnemy _currentTargetScript;
+
     private void Start()
     {
         _towerComplex = transform.GetComponentInParent<GuardTowerComplex>();
@@ -109,7 +111,7 @@ public class GuardTower : MonoBehaviour
         {
             int _rand = UnityEngine.Random.Range(0, enemiesInRange.Count);
             _currentTarget = enemiesInRange[_rand];
-            _currentTargetScript = _currentTarget.GetComponent<Enemy>();
+            _currentTargetScript = _currentTarget.GetComponent<IEnemy>();
             _targetAimPoint = _currentTarget.transform.GetChild(0);
         }
     }
@@ -135,6 +137,7 @@ public class GuardTower : MonoBehaviour
     IEnumerator WaitAndShoot(float _rate)
     {
         Shoot();
+        turret.DOPunchPosition(-turret.forward, .075f, 1, .25f);
         yield return new WaitForSeconds(_rate);
         reloaded = true;
     }

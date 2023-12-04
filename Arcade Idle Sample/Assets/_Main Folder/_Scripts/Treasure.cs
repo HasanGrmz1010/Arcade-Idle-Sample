@@ -4,12 +4,12 @@ public class Treasure : MonoBehaviour
 {
     float treasure_health;
 
-    private void Start()
+    private void Awake()
     {
         treasure_health = GameManager.instance._managerData.Treasure_Health;
     }
 
-    public void TakeDamage(int _val)
+    public void TakeDamage_Treasure(int _val)
     {
         treasure_health -= _val;
     }

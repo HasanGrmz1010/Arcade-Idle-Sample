@@ -14,18 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Start_Money: 600
   Treasure_Health: 200
+  GG_unlock_cost: 1000
+  GG_production_rate: 1
+  GG_gem_value: 2
   GC_unlock_cost: 200
   GC_production_rate: 12
   GC_gem_value: 20
   GT_unlock_cost: 400
   GT_fire_rate: 0.75
   GT_bullet_damage: 10
-  GT_bullet_speed: 5
+  GT_bullet_speed: 7
   Walker_pool_size: 60
   Walker_spawn_time: 2
-  Walker_damage: 20
-  Walker_hitpoint: 50
+  Walker_damage: 10
+  Walker_hitpoint: 30
   Walker_prize: 30
+  Goblin_pool_size: 60
+  Goblin_spawn_time: 2
+  Goblin_damage: 5
+  Goblin_hitpoint: 10
+  Goblin_prize: 20
+  Golem_pool_size: 60
+  Golem_spawn_time: 2
+  Golem_damage: 20
+  Golem_hitpoint: 120
+  Golem_prize: 50
   enemy_hit: {fileID: 7486790876492956444, guid: 59b2cd1f7b2837843b8d72975a2d2df1,
     type: 3}
   enemy_poof: {fileID: 2916237139199889546, guid: a344fea545071a34b97e1e9b59723921,

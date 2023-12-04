@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GemCollectorComplex : MonoBehaviour
+public class GemCollectorComplex : MonoBehaviour, IComplex
 {
     [Header("==== Collector Body Meshes ====")]
     [SerializeField] GameObject COLLECTOR;
@@ -36,10 +36,10 @@ public class GemCollectorComplex : MonoBehaviour
         seq.Append(smasher.DOMoveY(-1f, .4f).SetEase(Ease.InOutBounce));
         seq.Append(smasher.DOMoveY(2f, 2f).SetEase(Ease.InCubic).SetDelay(.4f));
         seq.SetDelay(1.25f);
-        seq.OnComplete(SmashGround);
+        seq.OnComplete(Animate);
 
         cost = GameManager.instance._managerData.GC_unlock_cost;
-        GCUnlocked += RaiseGemCollector;
+        GCUnlocked += RaiseBuilding;
         unlocked = false; player_inside = false; raised = false;
     }
 
@@ -77,7 +77,7 @@ public class GemCollectorComplex : MonoBehaviour
         }
     }
 
-    IEnumerator Unlocking(float _sec)
+    public IEnumerator Unlocking(float _sec)
     {
         if (cost < 0)
         {
@@ -92,7 +92,7 @@ public class GemCollectorComplex : MonoBehaviour
         player_inside = true;
     }
 
-    void RaiseGemCollector(object sender, EventArgs e)
+    public void RaiseBuilding(object sender, EventArgs e)
     {
         Player.instance.TakeMoney(GameManager.instance._managerData.GC_unlock_cost);
         onMoneyChanged?.Invoke(this, EventArgs.Empty);
@@ -105,7 +105,7 @@ public class GemCollectorComplex : MonoBehaviour
         });
     }
 
-    void SmashGround()
+    public void Animate()
     {
         seq.Rewind();
         seq.Restart();

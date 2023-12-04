@@ -111,7 +111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1.175}
+  m_AnchoredPosition: {x: 0, y: 1.2}
   m_SizeDelta: {x: 4, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &795426227
@@ -715,7 +715,6 @@ MonoBehaviour:
   smasher: {fileID: 4682855857880630539}
   fill_img: {fileID: 4682855858727506354}
   corner_img: {fileID: 4682855858674970979}
-  gem_fill_img: {fileID: 474443798}
   cost_text: {fileID: 795426226}
   name_text: {fileID: 4421231281739809668}
 --- !u!1 &4682855858674970977
@@ -1266,7 +1265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc6ed6444d99dad488516f712df2b2f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gem_fill_img: {fileID: 474443798}
 --- !u!1 &8197979160232023638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,7 +1291,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8197979160232023638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.000014781952}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1302,7 +1300,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2.5}
+  m_AnchoredPosition: {x: 0, y: 2.35}
   m_SizeDelta: {x: 4, y: 0.75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1060543580580947106
