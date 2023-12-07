@@ -23,18 +23,23 @@ public class ManagerSO : ScriptableObject
     public int GT_bullet_damage;
     public float GT_bullet_speed;
 
+    [Header("==== HELPER BOT VARIABLES ====")]
+    public float HB_fire_rate;
+    public int HB_bullet_damage;
+    public float HB_bullet_speed;
+
     public Dictionary<int, int> Level_EnemySeries = new Dictionary<int, int>
     {
-        {1, 6},
-        {2, 9},
-        {3, 12},
-        {4, 12},
-        {5, 15},
-        {6, 18},
-        {7, 18},
-        {8, 21},
-        {9, 24},
-        {10, 30}
+        {1, 12},
+        {2, 15},
+        {3, 18},
+        {4, 18},
+        {5, 21},
+        {6, 24},
+        {7, 24},
+        {8, 30},
+        {9, 30},
+        {10, 33}
     };
 
     [Header("==== WALKER VARIABLES ====")]

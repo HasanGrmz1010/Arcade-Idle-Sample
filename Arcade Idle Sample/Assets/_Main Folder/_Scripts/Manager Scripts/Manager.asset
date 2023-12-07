@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Manager
   m_EditorClassIdentifier: 
   Start_Money: 600
-  Treasure_Health: 200
+  Treasure_Health: 50
   GG_unlock_cost: 1000
   GG_production_rate: 1
   GG_gem_value: 2
@@ -24,6 +24,9 @@ MonoBehaviour:
   GT_fire_rate: 0.75
   GT_bullet_damage: 10
   GT_bullet_speed: 7
+  HB_fire_rate: 0.25
+  HB_bullet_damage: 2
+  HB_bullet_speed: 6
   Walker_pool_size: 60
   Walker_spawn_time: 2
   Walker_damage: 10

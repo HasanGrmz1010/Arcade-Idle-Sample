@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -21,15 +22,21 @@ public class Player : MonoBehaviour
 
     private int money;
 
+    [SerializeField] ParticleSystem walk_particle;
     [SerializeField] Animator _animator;
-    bool isTouchingScreen;
+    bool isTouchingScreen, canMove;
     public float moveSpeed;
 
     Vector3 moveVec, initMousePos, mousePos;
 
+    private void Start()
+    {
+        Treasure.instance.onGameOver_Treasure += EnableDisableMovement;
+    }
+
     void Update()
     {
-        HandleMovement();
+        if (canMove) HandleMovement();
     }
 
     #region MovementScripts
@@ -43,9 +50,13 @@ public class Player : MonoBehaviour
 
         else if (Input.GetMouseButton(0) && isTouchingScreen)
         {
-            if (!_animator.GetBool("running")) { _animator.SetBool("running", true); }
             mousePos = Input.mousePosition;
             moveVec = mousePos - initMousePos;
+            if (!_animator.GetBool("running") && moveVec.magnitude > 0.1f)
+            {
+                walk_particle.Play();
+                _animator.SetBool("running", true);
+            }
             ModifyMoveVector();
             transform.forward = Vector3.Lerp(transform.forward, moveVec, 20f * Time.deltaTime);
             transform.position += moveVec * moveSpeed * Time.deltaTime;
@@ -54,6 +65,7 @@ public class Player : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             _animator.SetBool("running", false);
+            walk_particle.Stop();
             isTouchingScreen = false;
             initMousePos = Vector3.zero;
         }
@@ -66,6 +78,25 @@ public class Player : MonoBehaviour
         moveVec = moveVec.normalized;
     }
     #endregion
+
+    public void CanMove(bool _val) { canMove = _val; }
+
+    void EnableDisableMovement(object sender, EventArgs e)
+    {
+        canMove = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        switch (other.gameObject.layer)
+        {
+            case 7:
+                Debug.Log("AAAAAA");
+                break;
+            default:
+                break;
+        }
+    }
 
     #region Economy Scripts
     public void GiveMoney(int _val) { money += _val; }

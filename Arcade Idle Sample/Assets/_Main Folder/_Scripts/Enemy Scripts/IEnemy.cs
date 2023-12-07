@@ -12,4 +12,6 @@ public interface IEnemy
     public void setDead(bool _val);
     public void SetHealth(int _val);
 
+    public void DisableMovement(object _sender, EventArgs _args);
+
 }

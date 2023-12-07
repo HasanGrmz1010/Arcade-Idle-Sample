@@ -9,20 +9,29 @@ public class Golem : MonoBehaviour, IEnemy
     const string obj_tag = "golem";
     int Health;
     bool dead;
+    float _speed;
 
     [SerializeField] NavMeshAgent _agent;
 
     GameManager manager = GameManager.instance;
 
     // ========= EVENTS =========
-    public event EventHandler onBulletHit;
+    public event EventHandler onTowerBulletHit;
+    public event EventHandler onBotBulletHit;
     public event EventHandler onTreasureHit;
     public event EventHandler onEnemyDead;
     void Start()
     {
-        onBulletHit += TakeDamage;
+        _speed = _agent.speed;
+
+        // ====== SUBSCRIBTIONS ======
+        Treasure.instance.onGameOver_Treasure += DisableMovement;
+        onTowerBulletHit += TakeDamage;
+        onBotBulletHit += TakeBotDamage;
         onTreasureHit += InGameCanvas.instance.onTreasureHealthChanged;
         onEnemyDead += InGameCanvas.instance.onMoneyChanged;
+
+
         Health = manager._managerData.Golem_hitpoint;
     }
 
@@ -30,8 +39,15 @@ public class Golem : MonoBehaviour, IEnemy
     {
         switch (other.gameObject.layer)
         {
+            case 11:
+                onBotBulletHit?.Invoke(this, EventArgs.Empty);
+                manager.SpawnPlayDestroyParticle(manager._managerData.enemy_hit,
+                    other.transform.position,
+                    Quaternion.identity);
+                Destroy(other.gameObject);
+                break;
             case 8:
-                onBulletHit?.Invoke(this, EventArgs.Empty);
+                onTowerBulletHit?.Invoke(this, EventArgs.Empty);
                 manager.SpawnPlayDestroyParticle(manager._managerData.enemy_hit,
                     other.transform.position,
                     Quaternion.identity);
@@ -76,5 +92,26 @@ public class Golem : MonoBehaviour, IEnemy
                     Quaternion.identity);
             WaveManager.instance.ReturnToPool(this.gameObject, obj_tag);
         }
+    }
+
+    public void TakeBotDamage(object _sender, EventArgs _args)
+    {
+        Health -= manager._managerData.HB_bullet_damage;
+        if (Health <= 0)
+        {
+            dead = true;
+            Player.instance.GiveMoney(manager._managerData.Golem_prize);
+            onEnemyDead?.Invoke(this, EventArgs.Empty);
+            manager.SpawnPlayDestroyParticle(manager._managerData.enemy_poof,
+                    new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z),
+                    Quaternion.identity);
+            WaveManager.instance.ReturnToPool(this.gameObject, obj_tag);
+        }
+    }
+
+    public void DisableMovement(object sender, EventArgs _args)
+    {
+        _agent.speed = 0f;
+        WaveManager.instance.ReturnToPool(this.gameObject, obj_tag);
     }
 }

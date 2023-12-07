@@ -2,15 +2,24 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class GuardTowerAmmo : MonoBehaviour
+public class Ammo : MonoBehaviour
 {
+    public enum AmmoType
+    {
+        tower,
+        bot
+    }
+    public AmmoType type;
+
     private float bulletSpeed;
     private Vector3 moveVec;
 
     void Start()
     {
         StartCoroutine(KillAfterSeconds());
-        bulletSpeed = GameManager.instance._managerData.GT_bullet_speed;
+        if (type == AmmoType.tower) bulletSpeed = GameManager.instance._managerData.GT_bullet_speed;
+        else if (type == AmmoType.bot) bulletSpeed = GameManager.instance._managerData.HB_bullet_speed;
+
     }
 
     void Update()

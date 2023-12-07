@@ -1,4 +1,9 @@
+using DG.Tweening;
+using System;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,7 +32,13 @@ public class GameManager : MonoBehaviour
         wave_active,
         wave_inactive
     }
+
     public State _state = State.wave_inactive;
+
+    private void Start()
+    {
+
+    }
 
     public void IncreaseLevel() { Level++; }
     public int GetLevel() { return Level; }
@@ -39,5 +50,10 @@ public class GameManager : MonoBehaviour
         effect.Play();
         float duration = effect.main.duration + .5f;
         Destroy(_particleObj, duration);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -129,7 +129,7 @@ public class GuardTower : MonoBehaviour
     void Shoot()
     {
         GameObject _bullet = Instantiate(_towerBullet, muzzlePoint.position, Quaternion.identity);
-        GuardTowerAmmo _ammoScript = _bullet.GetComponent<GuardTowerAmmo>();
+        Ammo _ammoScript = _bullet.GetComponent<Ammo>();
         Vector3 _bullet_vec = _targetAimPoint.position - muzzlePoint.position;
         _ammoScript.SetMoveVector(_bullet_vec);
     }
