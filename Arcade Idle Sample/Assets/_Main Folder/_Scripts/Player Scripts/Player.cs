@@ -58,8 +58,13 @@ public class Player : MonoBehaviour
                 _animator.SetBool("running", true);
             }
             ModifyMoveVector();
+
+            // Set player movement borders == 30&40
+            float clampedX = Mathf.Clamp(transform.position.x + moveVec.x * moveSpeed * Time.deltaTime, -30f, 30f);
+            float clampedZ = Mathf.Clamp(transform.position.z + moveVec.z * moveSpeed * Time.deltaTime, -40f, 40f);
+
+            transform.position = new Vector3(clampedX, transform.position.y, clampedZ);
             transform.forward = Vector3.Lerp(transform.forward, moveVec, 20f * Time.deltaTime);
-            transform.position += moveVec * moveSpeed * Time.deltaTime;
         }
 
         else if (Input.GetMouseButtonUp(0))

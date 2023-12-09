@@ -1,9 +1,11 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
 public class Treasure : MonoBehaviour
 {
     float treasure_health;
+    [SerializeField] Transform body;
 
     #region Singleton
     public static Treasure instance;
@@ -27,6 +29,7 @@ public class Treasure : MonoBehaviour
 
     public void TakeDamage_Treasure(int _val)
     {
+        body.DOPunchScale(Vector3.one / 10, .2f, 1, .2f);
         treasure_health -= _val;
         if (treasure_health <= 0f)
         {

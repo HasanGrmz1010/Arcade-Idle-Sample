@@ -65,7 +65,7 @@ public class InGameCanvas : MonoBehaviour
         if (!moneyText.text.Equals(_playerScript.GetMoney().ToString()))
         {
             moneyText.text = _playerScript.GetMoney().ToString();
-            moneyText.rectTransform.DOPunchScale(new Vector3(0.025f, 0.025f, 0.025f), 0.25f);
+            //moneyText.rectTransform.DOPunchScale(new Vector3(0.025f, 0.025f, 0.025f), 0.25f);
         }
         else return;
     }

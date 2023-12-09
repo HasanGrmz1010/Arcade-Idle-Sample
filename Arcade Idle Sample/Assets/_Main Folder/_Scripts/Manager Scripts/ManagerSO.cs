@@ -30,16 +30,16 @@ public class ManagerSO : ScriptableObject
 
     public Dictionary<int, int> Level_EnemySeries = new Dictionary<int, int>
     {
-        {1, 12},
-        {2, 15},
-        {3, 18},
-        {4, 18},
-        {5, 21},
-        {6, 24},
-        {7, 24},
-        {8, 30},
-        {9, 30},
-        {10, 33}
+        {1, 15},
+        {2, 24},
+        {3, 30},
+        {4, 33},
+        {5, 36},
+        {6, 42},
+        {7, 45},
+        {8, 48},
+        {9, 51},
+        {10,54}
     };
 
     [Header("==== WALKER VARIABLES ====")]

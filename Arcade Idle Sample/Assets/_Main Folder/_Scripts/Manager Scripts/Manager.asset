@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Manager
   m_EditorClassIdentifier: 
   Start_Money: 600
-  Treasure_Health: 50
+  Treasure_Health: 100
   GG_unlock_cost: 1000
   GG_production_rate: 1
   GG_gem_value: 2

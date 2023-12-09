@@ -10,6 +10,7 @@ public class HelperBot : MonoBehaviour
 
     [SerializeField] Transform muzzlePoint;
     [SerializeField] Transform playerFollowPoint;
+    [SerializeField] Transform bot_body;
     [SerializeField] private GameObject _botBullet;
     [SerializeField] private GameObject _currentTarget;
 
@@ -21,9 +22,9 @@ public class HelperBot : MonoBehaviour
 
     private void Start()
     {
-        transform.DOMoveY(transform.position.y - .3f, 1.75f).SetEase(Ease.OutCirc).OnComplete(() =>
+        transform.DOMoveY(transform.position.y - .4f, 1.25f).SetEase(Ease.OutCirc).OnComplete(() =>
         {
-            transform.DOMoveY(transform.position.y + .3f, 1.75f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+            transform.DOMoveY(transform.position.y + .4f, 1.25f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
         });
     }
 
@@ -146,7 +147,8 @@ public class HelperBot : MonoBehaviour
     IEnumerator WaitAndShoot(float _rate)
     {
         Shoot();
-        transform.DOPunchPosition((-transform.forward / 10), .1f, 1, 1f);
+        bot_body.DOPunchScale(new Vector3(.2f, .2f, .2f), .1f, 1, 1f);
+        //transform.DOPunchPosition((-transform.forward / 10), .1f, 1, 1f);
         yield return new WaitForSeconds(_rate);
         reloaded = true;
     }
